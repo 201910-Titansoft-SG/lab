@@ -64,7 +64,7 @@ namespace CSharpAdvanceDesignTests
         private IEnumerable<Employee> JoeyOrderBy(
             IEnumerable<Employee> employees,
             Func<Employee, string> firstKeySelector,
-            Comparer<string> firstKeyComparer)
+            IComparer<string> firstKeyComparer)
         {
             //bubble sort
             var elements = employees.ToList();
@@ -96,7 +96,7 @@ namespace CSharpAdvanceDesignTests
             }
         }
 
-        private static Comparer<string> GetSecondKeyComparer()
+        private static IComparer<string> GetSecondKeyComparer()
         {
             return Comparer<string>.Default;
         }
