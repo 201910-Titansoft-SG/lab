@@ -46,8 +46,9 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"},
             };
 
-            var actual = JoeyOrderByLastNameAndFirstName(employees,
-                employee => employee.LastName);
+            var actual = JoeyOrderBy(employees,
+                employee => employee.LastName,
+                Comparer<string>.Default);
 
             var expected = new[]
             {
@@ -60,12 +61,12 @@ namespace CSharpAdvanceDesignTests
             expected.ToExpectedObject().ShouldMatch(actual);
         }
 
-        private IEnumerable<Employee> JoeyOrderByLastNameAndFirstName(
+        private IEnumerable<Employee> JoeyOrderBy(
             IEnumerable<Employee> employees,
-            Func<Employee, string> firstKeySelector)
+            Func<Employee, string> firstKeySelector,
+            Comparer<string> firstKeyComparer)
         {
             //bubble sort
-            var stringComparer = Comparer<string>.Default;
             var elements = employees.ToList();
             while (elements.Any())
             {
@@ -75,14 +76,14 @@ namespace CSharpAdvanceDesignTests
                 {
                     var employee = elements[i];
 
-                    if (stringComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) < 0)
+                    if (firstKeyComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) < 0)
                     {
                         minElement = employee;
                         index = i;
                     }
-                    else if (stringComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) == 0)
+                    else if (firstKeyComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) == 0)
                     {
-                        if (stringComparer.Compare(employee.FirstName, minElement.FirstName) < 0)
+                        if (GetSecondKeyComparer().Compare(employee.FirstName, minElement.FirstName) < 0)
                         {
                             minElement = employee;
                             index = i;
@@ -93,6 +94,11 @@ namespace CSharpAdvanceDesignTests
                 elements.RemoveAt(index);
                 yield return minElement;
             }
+        }
+
+        private static Comparer<string> GetSecondKeyComparer()
+        {
+            return Comparer<string>.Default;
         }
         //private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees)
         //{
