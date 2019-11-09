@@ -7,18 +7,18 @@ namespace CSharpAdvanceDesignTests
 {
     public class MyComparerBuilder : IEnumerable<Employee>
     {
-        private readonly IComparer<Employee> _comparer;
+        private IComparer<Employee> _untilNowComparer;
         private readonly IEnumerable<Employee> _employees;
 
-        public MyComparerBuilder(IEnumerable<Employee> employees, IComparer<Employee> comparer)
+        public MyComparerBuilder(IEnumerable<Employee> employees, IComparer<Employee> untilNowComparer)
         {
             _employees = employees;
-            _comparer = comparer;
+            _untilNowComparer = untilNowComparer;
         }
 
         public IEnumerator<Employee> GetEnumerator()
         {
-            return Sort(_employees, _comparer);
+            return Sort(_employees, _untilNowComparer);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -49,6 +49,12 @@ namespace CSharpAdvanceDesignTests
                 elements.RemoveAt(index);
                 yield return minElement;
             }
+        }
+
+        public MyComparerBuilder AddComparer(IComparer<Employee> currentComparer)
+        {
+            _untilNowComparer = new ComboComparer(_untilNowComparer, currentComparer);
+            return this;
         }
     }
 }

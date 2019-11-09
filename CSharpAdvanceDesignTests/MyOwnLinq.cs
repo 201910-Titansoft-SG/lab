@@ -16,7 +16,7 @@ namespace CSharpAdvanceDesignTests
         public static MyComparerBuilder JoeyThenBy<TKey>(this MyComparerBuilder employees,
             Func<Employee, TKey> keySelector)
         {
-            throw new NotImplementedException();
+            return employees.AddComparer(new CombineKeyComparer<TKey>(keySelector, Comparer<TKey>.Default));
         }
 
         public static IEnumerable<Employee> JoeyOrderByComboComparer(this IEnumerable<Employee> employees,
