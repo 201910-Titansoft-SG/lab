@@ -11,6 +11,7 @@ namespace CSharpAdvanceDesignTests
         {
             throw new NotImplementedException();
         }
+
         public static IEnumerable<Employee> JoeyThenBy<TKey>(this IEnumerable<Employee> employees,
             Func<Employee, TKey> keySelector)
         {
@@ -20,7 +21,8 @@ namespace CSharpAdvanceDesignTests
         public static IEnumerable<Employee> JoeyOrderByComboComparer(this IEnumerable<Employee> employees,
             IComparer<Employee> comparer)
         {
-            return MyComparerBuilder.Sort(employees, comparer);
+            //return MyComparerBuilder.Sort(employees, comparer);
+            return new MyComparerBuilder(employees, comparer);
         }
     }
 }

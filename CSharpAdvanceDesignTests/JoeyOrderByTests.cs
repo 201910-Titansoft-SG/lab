@@ -1,4 +1,5 @@
-﻿using ExpectedObjects;
+﻿using System;
+using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -24,6 +25,15 @@ namespace CSharpAdvanceDesignTests
                 new CombineKeyComparer<string>(employee => employee.FirstName, Comparer<string>.Default);
 
             var actual = employees.JoeyOrderByComboComparer(new ComboComparer(firstComparer, secondComparer));
+
+            Console.WriteLine("1");
+            Console.WriteLine("2");
+            Console.WriteLine("3");
+
+            foreach (var employee in actual)
+            {
+                Console.WriteLine(employee);
+            }
 
             var expected = new[]
             {
