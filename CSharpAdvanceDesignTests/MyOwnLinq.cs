@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lab.Entities;
 
@@ -6,7 +7,18 @@ namespace CSharpAdvanceDesignTests
 {
     public static class MyOwnLinq
     {
-        public static IEnumerable<Employee> JoeyOrderBy(this IEnumerable<Employee> employees,
+        public static IEnumerable<Employee> JoeyOrderBy<TKey>(this IEnumerable<Employee> employees,
+            Func<Employee, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+        public static IEnumerable<Employee> JoeyThenBy<TKey>(this IEnumerable<Employee> employees,
+            Func<Employee, TKey> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static IEnumerable<Employee> JoeyOrderByComboComparer(this IEnumerable<Employee> employees,
             IComparer<Employee> comparer)
         {
             //bubble sort
