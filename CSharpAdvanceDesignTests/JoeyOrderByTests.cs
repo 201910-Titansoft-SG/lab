@@ -99,7 +99,7 @@ namespace CSharpAdvanceDesignTests
                         minElement = employee;
                         index = i;
                     }
-                    else if (combineKeyComparer.FirstKeyComparer.Compare(combineKeyComparer.FirstKeySelector(employee), combineKeyComparer.FirstKeySelector(minElement)) == 0)
+                    else if (combineKeyComparer.Compare(employee, minElement) == 0)
                     {
                         if (secondKeyComparer.Compare(secondKeySelector(employee), secondKeySelector(minElement)) < 0)
                         {
