@@ -6,13 +6,14 @@ namespace CSharpAdvanceDesignTests
 {
     public static class MyOwnLinq
     {
-        public static IEnumerable<Employee> JoeyOrderBy<TKey>(this IEnumerable<Employee> employees,
+        public static MyComparerBuilder JoeyOrderBy<TKey>(this IEnumerable<Employee> employees,
             Func<Employee, TKey> keySelector)
         {
-            throw new NotImplementedException();
+            var comparer = new CombineKeyComparer<TKey>(keySelector, Comparer<TKey>.Default);
+            return new MyComparerBuilder(employees, comparer);
         }
 
-        public static IEnumerable<Employee> JoeyThenBy<TKey>(this IEnumerable<Employee> employees,
+        public static MyComparerBuilder JoeyThenBy<TKey>(this MyComparerBuilder employees,
             Func<Employee, TKey> keySelector)
         {
             throw new NotImplementedException();
