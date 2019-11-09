@@ -5,7 +5,12 @@ using Lab.Entities;
 
 namespace CSharpAdvanceDesignTests
 {
-    public class MyComparerBuilder : IEnumerable<Employee>
+    public interface IMyOrderedEnumerable : IEnumerable<Employee>
+    {
+        IMyOrderedEnumerable CreateOrderedEnumerable(IComparer<Employee> comparer);
+    }
+
+    public class MyComparerBuilder : IMyOrderedEnumerable
     {
         private IComparer<Employee> _untilNowComparer;
         private readonly IEnumerable<Employee> _employees;
@@ -51,9 +56,9 @@ namespace CSharpAdvanceDesignTests
             }
         }
 
-        public MyComparerBuilder AddComparer(IComparer<Employee> currentComparer)
+        public IMyOrderedEnumerable CreateOrderedEnumerable(IComparer<Employee> comparer)
         {
-            _untilNowComparer = new ComboComparer(_untilNowComparer, currentComparer);
+            _untilNowComparer = new ComboComparer(_untilNowComparer, comparer);
             return this;
         }
     }

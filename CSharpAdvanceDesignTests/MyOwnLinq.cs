@@ -6,17 +6,17 @@ namespace CSharpAdvanceDesignTests
 {
     public static class MyOwnLinq
     {
-        public static MyComparerBuilder JoeyOrderBy<TKey>(this IEnumerable<Employee> employees,
+        public static IMyOrderedEnumerable JoeyOrderBy<TKey>(this IEnumerable<Employee> employees,
             Func<Employee, TKey> keySelector)
         {
             var comparer = new CombineKeyComparer<TKey>(keySelector, Comparer<TKey>.Default);
             return new MyComparerBuilder(employees, comparer);
         }
 
-        public static MyComparerBuilder JoeyThenBy<TKey>(this MyComparerBuilder employees,
+        public static IMyOrderedEnumerable JoeyThenBy<TKey>(this IMyOrderedEnumerable employees,
             Func<Employee, TKey> keySelector)
         {
-            return employees.AddComparer(new CombineKeyComparer<TKey>(keySelector, Comparer<TKey>.Default));
+            return employees.CreateOrderedEnumerable(new CombineKeyComparer<TKey>(keySelector, Comparer<TKey>.Default));
         }
 
         public static IEnumerable<Employee> JoeyOrderByComboComparer(this IEnumerable<Employee> employees,
