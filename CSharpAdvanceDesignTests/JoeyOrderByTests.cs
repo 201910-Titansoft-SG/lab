@@ -34,7 +34,6 @@ namespace CSharpAdvanceDesignTests
         //    expected.ToExpectedObject().ShouldMatch(actual);
         //}
 
-
         [Test]
         public void orderBy_lastName_and_firstName()
         {
@@ -88,7 +87,7 @@ namespace CSharpAdvanceDesignTests
                     }
                     else if (firstKeyComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) == 0)
                     {
-                        if (secondKeyComparer.Compare(secondKeySelector(employee), minElement.FirstName) < 0)
+                        if (secondKeyComparer.Compare(secondKeySelector(employee), secondKeySelector(minElement)) < 0)
                         {
                             minElement = employee;
                             index = i;
