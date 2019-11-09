@@ -74,7 +74,7 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"},
             };
 
-            var firstComparer = new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default); 
+            var firstComparer = new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default);
             var secondComparer = new CombineKeyComparer(employee => employee.FirstName, Comparer<string>.Default);
 
             var actual = JoeyOrderBy(
@@ -106,21 +106,29 @@ namespace CSharpAdvanceDesignTests
                 {
                     var employee = elements[i];
 
-                    if (comboComparer.FirstComparer.Compare(employee, minElement) < 0)
+                    var finalCompareResult = 0;
+
+                    var firstCompareResult = comboComparer.FirstComparer.Compare(employee, minElement);
+                    if (firstCompareResult < 0)
                     {
-                        minElement = employee;
-                        index = i;
+                        finalCompareResult = firstCompareResult;
                     }
                     else
                     {
-                        if (comboComparer.FirstComparer.Compare(employee, minElement) == 0)
+                        if (firstCompareResult == 0)
                         {
-                            if (comboComparer.SecondComparer.Compare(employee, minElement) < 0)
+                            var secondCompareResult = comboComparer.SecondComparer.Compare(employee, minElement);
+                            if (secondCompareResult < 0)
                             {
-                                minElement = employee;
-                                index = i;
+                                finalCompareResult = secondCompareResult;
                             }
                         }
+                    }
+
+                    if (finalCompareResult < 0)
+                    {
+                        minElement = employee;
+                        index = i;
                     }
                 }
 
