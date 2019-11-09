@@ -46,8 +46,11 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"},
             };
 
-            var actual = JoeyOrderBy(employees,
+            var actual = JoeyOrderBy(
+                employees,
                 employee => employee.LastName,
+                Comparer<string>.Default,
+                employee => employee.FirstName,
                 Comparer<string>.Default);
 
             var expected = new[]
@@ -64,7 +67,9 @@ namespace CSharpAdvanceDesignTests
         private IEnumerable<Employee> JoeyOrderBy(
             IEnumerable<Employee> employees,
             Func<Employee, string> firstKeySelector,
-            IComparer<string> firstKeyComparer)
+            IComparer<string> firstKeyComparer,
+            Func<Employee, string> secondKeySelector,
+            IComparer<string> secondKeyComparer)
         {
             //bubble sort
             var elements = employees.ToList();
@@ -83,7 +88,7 @@ namespace CSharpAdvanceDesignTests
                     }
                     else if (firstKeyComparer.Compare(firstKeySelector(employee), firstKeySelector(minElement)) == 0)
                     {
-                        if (GetSecondKeyComparer().Compare(employee.FirstName, minElement.FirstName) < 0)
+                        if (secondKeyComparer.Compare(secondKeySelector(employee), minElement.FirstName) < 0)
                         {
                             minElement = employee;
                             index = i;
@@ -96,10 +101,6 @@ namespace CSharpAdvanceDesignTests
             }
         }
 
-        private static IComparer<string> GetSecondKeyComparer()
-        {
-            return Comparer<string>.Default;
-        }
         //private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees)
         //{
         //    //bubble sort
