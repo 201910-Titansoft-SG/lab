@@ -24,6 +24,18 @@ namespace CSharpAdvanceDesignTests
         }
     }
 
+    public class ComboComparer
+    {
+        public ComboComparer(IComparer<Employee> firstComparer, IComparer<Employee> secondComparer)
+        {
+            FirstComparer = firstComparer;
+            SecondComparer = secondComparer;
+        }
+
+        public IComparer<Employee> FirstComparer { get; private set; }
+        public IComparer<Employee> SecondComparer { get; private set; }
+    }
+
     [TestFixture]
     public class JoeyOrderByTests
     {
@@ -62,9 +74,12 @@ namespace CSharpAdvanceDesignTests
                 new Employee {FirstName = "Joey", LastName = "Chen"},
             };
 
-            var actual = JoeyOrderBy(employees,
-                                     new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default),
-                                     new CombineKeyComparer(employee => employee.FirstName, Comparer<string>.Default));
+            var firstComparer = new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default); 
+            var secondComparer = new CombineKeyComparer(employee => employee.FirstName, Comparer<string>.Default);
+
+            var actual = JoeyOrderBy(
+                employees,
+                new ComboComparer(firstComparer, secondComparer));
 
             var expected = new[]
             {
@@ -79,8 +94,7 @@ namespace CSharpAdvanceDesignTests
 
         private IEnumerable<Employee> JoeyOrderBy(
             IEnumerable<Employee> employees,
-            IComparer<Employee> firstComparer,
-            IComparer<Employee> secondComparer)
+            ComboComparer comboComparer)
         {
             //bubble sort
             var elements = employees.ToList();
@@ -92,16 +106,16 @@ namespace CSharpAdvanceDesignTests
                 {
                     var employee = elements[i];
 
-                    if (firstComparer.Compare(employee, minElement) < 0)
+                    if (comboComparer.FirstComparer.Compare(employee, minElement) < 0)
                     {
                         minElement = employee;
                         index = i;
                     }
                     else
                     {
-                        if (firstComparer.Compare(employee, minElement) == 0)
+                        if (comboComparer.FirstComparer.Compare(employee, minElement) == 0)
                         {
-                            if (secondComparer.Compare(employee, minElement) < 0)
+                            if (comboComparer.SecondComparer.Compare(employee, minElement) < 0)
                             {
                                 minElement = employee;
                                 index = i;
