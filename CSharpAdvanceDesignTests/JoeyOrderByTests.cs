@@ -7,20 +7,20 @@ using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
-    public class CombineKeyComparer
+    public class CombineKeyComparer : IComparer<Employee>
     {
-        public CombineKeyComparer(Func<Employee, string> firstKeySelector, IComparer<string> firstKeyComparer)
+        public CombineKeyComparer(Func<Employee, string> keySelector, IComparer<string> keyComparer)
         {
-            FirstKeySelector = firstKeySelector;
-            FirstKeyComparer = firstKeyComparer;
+            KeySelector = keySelector;
+            KeyComparer = keyComparer;
         }
 
-        public Func<Employee, string> FirstKeySelector { get; private set; }
-        public IComparer<string> FirstKeyComparer { get; private set; }
+        public Func<Employee, string> KeySelector { get; private set; }
+        public IComparer<string> KeyComparer { get; private set; }
 
-        public int Compare(Employee employee, Employee minElement)
+        public int Compare(Employee x, Employee y)
         {
-            return FirstKeyComparer.Compare(FirstKeySelector(employee), FirstKeySelector(minElement));
+            return KeyComparer.Compare(KeySelector(x), KeySelector(y));
         }
     }
 
@@ -63,9 +63,9 @@ namespace CSharpAdvanceDesignTests
             };
 
             var actual = JoeyOrderBy(employees,
-                new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default),
-                employee => employee.FirstName,
-                Comparer<string>.Default);
+                                     new CombineKeyComparer(employee => employee.LastName, Comparer<string>.Default),
+                                     employee => employee.FirstName,
+                                     Comparer<string>.Default);
 
             var expected = new[]
             {
@@ -80,7 +80,7 @@ namespace CSharpAdvanceDesignTests
 
         private IEnumerable<Employee> JoeyOrderBy(
             IEnumerable<Employee> employees,
-            CombineKeyComparer combineKeyComparer,
+            IComparer<Employee> firstComparer,
             Func<Employee, string> secondKeySelector,
             IComparer<string> secondKeyComparer)
         {
@@ -94,12 +94,12 @@ namespace CSharpAdvanceDesignTests
                 {
                     var employee = elements[i];
 
-                    if (combineKeyComparer.Compare(employee, minElement) < 0)
+                    if (firstComparer.Compare(employee, minElement) < 0)
                     {
                         minElement = employee;
                         index = i;
                     }
-                    else if (combineKeyComparer.Compare(employee, minElement) == 0)
+                    else if (firstComparer.Compare(employee, minElement) == 0)
                     {
                         if (secondKeyComparer.Compare(secondKeySelector(employee), secondKeySelector(minElement)) < 0)
                         {
