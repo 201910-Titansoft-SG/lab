@@ -3,7 +3,6 @@ using ExpectedObjects;
 using Lab.Entities;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CSharpAdvanceDesignTests
 {
@@ -88,9 +87,7 @@ namespace CSharpAdvanceDesignTests
             var firstComparer = new CombineKeyComparer<string>(employee => employee.LastName, Comparer<string>.Default);
             var secondComparer = new CombineKeyComparer<string>(employee => employee.FirstName, Comparer<string>.Default);
 
-            var actual = JoeyOrderBy(
-                employees,
-                new ComboComparer(firstComparer, secondComparer));
+            var actual = employees.JoeyOrderBy(new ComboComparer(firstComparer, secondComparer));
 
             var expected = new[]
             {
@@ -126,7 +123,7 @@ namespace CSharpAdvanceDesignTests
 
             var comboComparer = new ComboComparer(untilNowComparer, lastComparer);
 
-            var actual = JoeyOrderBy(employees, comboComparer);
+            var actual = employees.JoeyOrderBy(comboComparer);
 
             var expected = new[]
             {
@@ -138,34 +135,6 @@ namespace CSharpAdvanceDesignTests
             };
 
             expected.ToExpectedObject().ShouldMatch(actual);
-        }
-
-        private IEnumerable<Employee> JoeyOrderBy(
-            IEnumerable<Employee> employees,
-            IComparer<Employee> comparer)
-        {
-            //bubble sort
-            var elements = employees.ToList();
-            while (elements.Any())
-            {
-                var minElement = elements[0];
-                var index = 0;
-                for (int i = 1; i < elements.Count; i++)
-                {
-                    var employee = elements[i];
-
-                    var compareResult = comparer.Compare(employee, minElement);
-
-                    if (compareResult < 0)
-                    {
-                        minElement = employee;
-                        index = i;
-                    }
-                }
-
-                elements.RemoveAt(index);
-                yield return minElement;
-            }
         }
 
         //private IEnumerable<Employee> JoeyOrderByLastName(IEnumerable<Employee> employees)
